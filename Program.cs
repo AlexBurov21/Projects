@@ -1,131 +1,81 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.Runtime.InteropServices;
+using System.Xml.Schema;
 
-namespace ClassPractice
+namespace Zoo
 {
-        //Make classes for animals
-        enum Colors
-        {
-            Red,
-            Blue,
-            Green,
-        }
+    enum Colors
+    {
+        Red,
+        Green,
+        Blue,
+        Yellow,
+        Brown,
+        Black,
+        Orange,
+        Pink,
+        Purple,
+        Striped
+    }
+    
     internal class Program
     {
-    /*
-        //public, private, protected
-        abstract class Shape
-        {
-            public Shape(int x, int y, int width, int height)
-            {
-                this.x = x;
-                this.y = y;
-                this.width = width;
-                this.height = height;
-            }
 
-            public int x { get; set; }
-            public int y { get; set; }
-            public int width { get; set; }
-            public int height { get; set; }
+        //Zoo with animal parent class
+        //Animals all have name, color, age, action
+        //Some animals have a class that has a special action: jump, eating worms, etc
+        //People can see the animals, or bring in their own animals into the zoo
+        //Max of 15 animals
+        //Use polymorphism 
+        //Be able to search for animals by name, color, or age and show all animals with that characterstic
 
-            public abstract void Draw();
 
-            public virtual void Print()
-            {
-                Console.WriteLine("This is a shape");
-            }
-        }
-
-        class Rectangle : Shape
-        {
-            public int color { get; set; }
-
-            public Rectangle (int x, int y, int width, int height, int color) : base(x, y, width, height)
-            {
-                this.color = color;
-            }
-
-            public void DoSomething(int val)
-            {
-                x -= val;
-            }
-
-            public override void Draw()
-            {
-                
-            }
-
-            public override void Print()
-            {
-                base.Print();
-                Console.WriteLine("Rectangle");
-            }
-        }
-        class Circle : Shape
-        {
-            public int radius { get; set; }
-
-            public Circle(int x, int y, int width, int height, int radius) : base(x, y, width, height)
-            {
-                this.radius = radius;
-            }
-            public override void Draw()
-            {
-
-            }
-        }
-        */
-        static void Battle(Fox fox, Lizard lizard)
-        {
-            while (lizard.Health > 0 && fox.Health > 0)
-            {
-                int FoxAttacked = fox.AttackAnimal(lizard);
-                if (lizard.Health < 0)
-                {
-                    lizard.Health = 0;
-                }
-                Console.WriteLine($"{fox.Name} hits {lizard.Name} for {FoxAttacked} hit points. {lizard.Name} is now at {lizard.Health} health");
-                Console.WriteLine("Continue?");
-                Console.ReadLine();
-                if(lizard.Health <= 0)
-                {
-                    break;
-                }
-                int LizardAttacked = lizard.AttackAnimal(fox);
-                if (fox.Health < 0)
-                {
-                    fox.Health = 0;
-                }
-                Console.WriteLine($"{lizard.Name} hits {fox.Name} for {LizardAttacked} hit points. {fox.Name} is now at {fox.Health} health");
-            }
-            if (lizard.Health <= 0)
-            {
-                Console.WriteLine($"{fox.Name} wins!");
-            }
-            else if (fox.Health <= 0)
-            {
-                Console.WriteLine($"{lizard.Name} Wins!");
-            }
-        }
         static void Main(string[] args)
         {
-            /*
-            List<Shape> list = new List<Shape>();
-
-            list.Add(new Rectangle(10, 10, 20, 20, 5));
-            list.Add(new Circle(10, 23, 41, 5, 52));
-
-            list[0].Print();
-            list[1].Print();
-            Rectangle r = list[0] as Rectangle;
-            if(r != null)
+            string userInput = "";
+            int animalChoice = 0;
+            bool running = true;
+            Animal[] animalList = new Animal[]
             {
-                r.color = 1;
+                new Ape("Ape", "Jeb", Colors.Black, 7),
+                new Kangaroo("Kangaroo", "Steve", Colors.Brown, 3),
+                new Monkey("Monkey", "Daniel", Colors.Brown, 5),
+                new Bird("Bird", "Jonas", Colors.Green, 1)
+            };
+            while (running ==  true)
+            {
+                Console.WriteLine("Welcome to the zoo! What would you like to do? (input the number of the action you would like to execute.)");
+                Console.WriteLine("(1) View animals");
+                Console.WriteLine("(2) Bring a new animal into the zoo");
+                Console.WriteLine("(3) Exit");
+                userInput = Console.ReadLine();
+                bool running2 = true;
+                if(userInput == "1")
+                {
+                    while (running2 ==  true)
+                    {
+                        Console.WriteLine("What animal would you like to view");
+                        for (int i = 0; i < animalList.Length; i++)
+                        {
+                            Console.WriteLine($"({i + 1}) {animalList[i].Type}");
+                        }
+                        bool wasParsed = false;
+                        while(wasParsed = false)
+                        { 
+                            wasParsed = int.TryParse(Console.ReadLine(), out animalChoice);
+                            if (!wasParsed || animalChoice > animalList.Length || animalChoice < 0)
+                            {
+                                Console.WriteLine("Invalid input");
+                            }
+                            else wasParsed = true;
+                        }
+
+                        Console.WriteLine($"{animalList[animalChoice]}");
+                        
+                    }
+                }
             }
-            */
-            Fox foxReginald = new Fox(11, Colors.Green, "Reggie", 20, 10);
-            Lizard lizardBanana = new Lizard(2, Colors.Red, "BANANA", 17, 5);
-            Battle(foxReginald, lizardBanana);
+            
+            
         }
     }
 }
