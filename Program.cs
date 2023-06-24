@@ -1,179 +1,146 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+using System.Xml.Schema;
 
-namespace Bank
+namespace Zoo
 {
-    // Bugs: need to stay logged in.
+    enum Colors
+    {
+        None,
+        Red,
+        Green,
+        Blue,
+        Yellow,
+        Brown,
+        Black,
+        Orange,
+        Pink,
+        Purple,
+        Striped
+    }
+    
     internal class Program
     {
-        static Account[] accounts = new Account[0];
-        static void resize()
+
+        //Zoo with animal parent class
+        //Animals all have name, color, age, action
+        //Some animals have a class that has a special action: jump, eating worms, etc
+        //People can see the animals, or bring in their own animals into the zoo
+        //Max of 15 animals
+        //Use polymorphism 
+        //Be able to search for animals by name, color, or age and show all animals with that characterstic
+        
+        static void resize(Animal[] arrayName)
         {
-            Account[] temp = new Account[accounts.Length + 1];
-            for (int i = 0; i < accounts.Length; i++)
+            Animal[] temp = new Animal[arrayName.Length + 1];
+            for (int i = 0; i < arrayName.Length; i++)
             {
-                temp[i] = accounts[i];
+                temp[i] = arrayName[i];
             }
-            accounts = temp;
+            arrayName = temp;
         }
+
         static void Main(string[] args)
         {
-
+            string userInput = "";
+            int animalChoice = 0;
             bool running = true;
-
-            
-            while (running == true)
+            Animal[] animalList = new Animal[]
             {
-                Console.WriteLine("Welcome! Please select an option:");
-                Console.WriteLine("1) Log in with an existing account");
-                Console.WriteLine("2) Create a new account");
-                Console.WriteLine("3) Exit");
-                Console.WriteLine();
-                string firstScreenResponse = Console.ReadLine();
-                if (firstScreenResponse == null) { }
-                else if (firstScreenResponse == "1" && accounts.Length == 0)
-                {
-                    Console.WriteLine("There are no existing accounts.");
-                }
-                else if (firstScreenResponse == "1" && accounts.Length > 0)
-                {
-                    Console.WriteLine("Please input your username. If you would like to exit, please input 'exit'.");
-                    string userLogIn = Console.ReadLine();
-                    string passLogIn = "";
-                    string userChoice = "";
-                    int addAmount = 0;
-                    bool loggedIn = false;
-                    if (userLogIn == "exit" || userLogIn == "")
-                    {
-                        break;
-                    }
-                    for (int i = 0; i < accounts.Length; i++)
-                    {
-                        if (userLogIn == accounts[i].username && accounts[i].failedAttempts < 3)
-                        {
-                            Console.WriteLine($"Please input your password,{accounts[i].username} (Failed Attempts[{accounts[i].failedAttempts}])");
-                            passLogIn = Console.ReadLine();
-                            if (passLogIn == accounts[i].password)
-                            {
-                                loggedIn = true;
-                                while(loggedIn == true)
-                                {
-                                    Console.WriteLine($"Welcome, {accounts[i].username}! Please select an option:");
-                                    Console.WriteLine("1) View your balance.");
-                                    Console.WriteLine("2) Add money to your account.");
-                                    Console.WriteLine("3) Retrieve money from your account.");
-                                    Console.WriteLine("4) Exit to menu");
-                                    userChoice = Console.ReadLine();
-                                    if (userChoice == "1")
-                                    {
-                                        Console.WriteLine($"Your balance in your account is currently: {accounts[i].balance}");
-                                        Console.WriteLine($"Your balance on hand is currently; {accounts[i].moneyOnHand}");
-                                    }
-                                    else if (userChoice == "2")
-                                    {
-                                        Console.WriteLine("What amount would you like to add?");
-                                        bool wasParsed = int.TryParse(Console.ReadLine(), out addAmount);
-                                        if (!wasParsed || addAmount > accounts[i].moneyOnHand || addAmount <= 0)
-                                        {
-                                            Console.WriteLine("Invalid input");
-                                        }
-                                        else
-                                        {
-                                            accounts[i].balance += addAmount;
-                                            accounts[i].moneyOnHand -= addAmount;
-                                            Console.WriteLine($"Your balance in your account is currently: {accounts[i].balance}");
-                                            Console.WriteLine($"Your balance on hand is currently; {accounts[i].moneyOnHand}");
-                                        }
+                new Ape("Ape", "Jeb", Colors.Black, 7),
+                new Kangaroo("Kangaroo", "Steve", Colors.Brown, 3),
+                new Monkey("Monkey", "Daniel", Colors.Brown, 5),
+                new Bird("Bird", "Jonas", Colors.Green, 1)
+            };
 
-                                    }
-                                    else if (userChoice == "3")
-                                    {
-                                        Console.WriteLine($"What amount would you like to retrieve(you currently have ${accounts[i].balance} in your account)?");
-                                        bool wasParsed = int.TryParse(Console.ReadLine(), out addAmount);
-                                        if (!wasParsed || addAmount > accounts[i].balance || addAmount <= 0)
-                                        {
-                                            Console.WriteLine("Invalid input");
-                                        }
-                                        else
-                                        {
-                                            accounts[i].balance -= addAmount;
-                                            accounts[i].moneyOnHand += addAmount;
-                                            Console.WriteLine($"Your balance in your account is currently: {accounts[i].balance}");
-                                            Console.WriteLine($"Your balance on hand is currently; {accounts[i].moneyOnHand}");
-                                        }
-                                    }
-                                    else if(userChoice == "4")
-                                    {
-                                        loggedIn = false;
-                                    }
-                                } 
+            while (running ==  true)
+            {
+                Console.WriteLine("Welcome to the zoo! What would you like to do? (input the number of the action you would like to execute.)");
+                Console.WriteLine("(1) View animals");
+                Console.WriteLine("(2) Bring a new animal into the zoo");
+                Console.WriteLine("(3) Exit");
+                userInput = Console.ReadLine();
+                bool running2 = true;
+                if(userInput == "1")
+                {
+                    while (running2 ==  true)
+                    {
+                        Console.WriteLine("What animal would you like to view");
+                        for (int i = 0; i < animalList.Length; i++)
+                        {
+                            Console.WriteLine($"({i + 1}) {animalList[i].Type}");
+                        }
+                        bool wasParsed = int.TryParse(Console.ReadLine(), out animalChoice);
+                        if (!wasParsed || animalChoice > animalList.Length || animalChoice > 0)
+                        {
+                            Console.WriteLine("Invalid input. Returning you to menu . . .");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"{animalList[animalChoice]}");
+                        }
+                        
+                    }
+                }
+                else if(userInput == "2") 
+                {
+                    bool running3 = true;
+                    while (running == true) 
+                    {
+
+                        string userInputAnimalType = "";
+                        string userInputAnimalName = "";
+                        Colors userInputAnimalColor = Colors.None;
+                        int userInputAnimalAge = 0;
+
+                        bool running4 = false;
+
+                        while (running4 = false)
+                        {
+                            Console.WriteLine("What animal are you bringing in?");
+                            userInputAnimalType = Console.ReadLine();
+                            if (userInputAnimalName != "" )
+                            Console.WriteLine("What is the animals name?");
+                            userInputAnimalType = Console.ReadLine();
+                            Console.WriteLine("What is the color of the animal? (input the number value)");
+                            string[] names = Enum.GetNames(typeof(Colors));
+                            for (int i = 0; i < names.Length; i++)
+                            {
+                                Console.WriteLine($"{i}) {names[i]}");
+                            }
+                            userInputAnimalColor = (Colors)int.Parse(Console.ReadLine());
+                            Console.WriteLine("How old is the animal? (years)");
+                            userInputAnimalAge = int.Parse(Console.ReadLine());
+                            resize(animalList);
+
+                            if (userInputAnimalType.ToLower() == "ape")
+                            {
+                                animalList[animalList.Length] = new Ape(userInputAnimalType, userInputAnimalName, userInputAnimalColor, userInputAnimalAge);
+                            }
+                            else if (userInputAnimalType.ToLower() == "monkey")
+                            {
+                                animalList[animalList.Length] = new Monkey(userInputAnimalType, userInputAnimalName, userInputAnimalColor, userInputAnimalAge);
+                            }
+                            else if (userInputAnimalType.ToLower() == "kangaroo")
+                            {
+                                animalList[animalList.Length] = new Kangaroo(userInputAnimalType, userInputAnimalName, userInputAnimalColor, userInputAnimalAge);
+                            }
+                            else if (userInputAnimalType.ToLower() == "bird")
+                            {
+                                animalList[animalList.Length] = new Bird(userInputAnimalType, userInputAnimalName, userInputAnimalColor, userInputAnimalAge);
                             }
                             else
                             {
-                                accounts[i].failedAttempts++;
-                                Console.WriteLine($"Incorrect password. You have {3 - accounts[i].failedAttempts} remaining.");
-                                if (accounts[i].failedAttempts >= 3)
-                                {
-                                    Console.WriteLine("You have now reached the maximum amount of failed log in attempts. This account is now locked until further notice.");
-                                    break;
-                                }
+                                animalList[animalList.Length] = new Animal(userInputAnimalType, userInputAnimalName, userInputAnimalColor, userInputAnimalAge);
                             }
-                           
-                        }
-                        else if (userLogIn != accounts[i].username && accounts[i].failedAttempts !< 3)
-                        {
-                            Console.WriteLine("This account either doesn't exist, or it is locked.");
+
                         }
                     }
-                    
-
-                }
-
-                else if (firstScreenResponse == "2")
-                {
-                    bool input1 = false;
-                    string setUserName = "";
-                    string setpassword = "";
-                    while (input1 == false)
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine("Please input a username: ");
-                        setUserName = Console.ReadLine();
-                        if (accounts.Length >= 1)
-                        {
-                            for(int i = 0; i <  accounts.Length; i++)
-                            {
-                                if (setUserName == "" || setUserName == accounts[i].username) 
-                                {
-                                    Console.WriteLine("This username is invalid/taken.");
-                                    break;
-                                }
-                                else input1= true;
-                            }
-                        }
-                        else 
-                        {
-                            input1 = true;
-                        }
-                    }
-                    bool input2 = false;
-                    while (input2 == false)
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine("Please input a password: ");
-                        setpassword = Console.ReadLine();
-
-                        if (setpassword == "") { }
-                        else { input2 = true; }
-                    }
-                    resize();
-                    accounts[accounts.Length - 1] = new Account(setUserName, setpassword, 0, 0, 120000);
-                }
-
-                else if(firstScreenResponse == "3")
-                {
-                    break;
                 }
             }
+            
+            
         }
     }
 }

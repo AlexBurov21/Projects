@@ -12,7 +12,7 @@ namespace Zoo
         {
         }
 
-        public virtual void kangarooMoment()
+        public override void SpecialAction()
         {
             Console.WriteLine("*the kangaroo jumps up and down*");
         }

@@ -12,7 +12,7 @@ namespace Zoo
         {
         }
 
-        public virtual void ApeSpin()
+        public  void ApeSpin()
         {
             Console.WriteLine("*ape does spin and pounds chest*");
         }
